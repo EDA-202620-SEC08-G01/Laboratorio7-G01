@@ -1,7 +1,8 @@
 
 from DataStructures.Tree import bst_node as bn
+
 def insert_node (root, key,  value):
-     if root is None:
+    if root is None:
          return bn.new_node(key,value)
          
     cmp= default_compare(key,root)
@@ -9,16 +10,14 @@ def insert_node (root, key,  value):
     if cmp == 0 :
          root["value"]= value
     elif cmp ==1 :
-        insert_node(root["right"], ke, value)
+        insert_node(root["right"], key, value)
     else:
-         insert_node(root["left"], ke, value)    
+         insert_node(root["left"], key, value)    
     return root 
 
 def put (my_bst, key, value):
     return insert_node(my_bst, key, value)    
     
-
-
 def default_compare(key, element):
     if key == bn.get_key(element):
         return 0
