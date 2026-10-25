@@ -223,16 +223,15 @@ def get_crimes_by_range_code(analyzer, initialDate, offensecode):
     """
     # TODO Completar la función de consulta de crimenes por tipo de crimen en una fecha
     result_list = al.new_list()
+    dates_list = al.new_list()
     
-    # Obtener la entrada correspondiente a la fecha específica usando bst.get
     datentry = bst.get(analyzer['dateIndex'], initialDate)
     
-    if datentry is not None:
-        offenseIndex = datentry['offenseIndex']
-        offentry = lp.get(offenseIndex, offensecode)
+    for i in range(1, al.size(dates_list) + 1):
+        datentry = al.get(dates_list, i)
+        lst_crimes = datentry['lstcrimes']
         
-        if offentry is not None:
-            for j in range(1, al.size(offentry) + 1):
-                al.add_last(result_list, al.get(offentry, j))
-                
+        for j in range(1, al.size(lst_crimes) + 1):
+            al.add_last(result_list, al.get(lst_crimes, j))
+            
     return result_list
