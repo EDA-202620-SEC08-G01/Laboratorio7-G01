@@ -1,5 +1,6 @@
 from DataStructures.Tree import bst_node as bn
 from DataStructures.List import array_list as al
+from DataStructures.List import single_linked_list as sl
 
 def new_map():
     """
@@ -227,3 +228,79 @@ def delete_min(my_bst):
     my_bst['root'] = delete_min_node(my_bst['root'])
     return my_bst
 
+
+
+
+
+
+def delete_max_node(root):
+    if root is None:
+        return None
+    elif root["right"] is None:
+        return root["left"]
+    else: 
+        root["right"] = delete_max_node(root["right"])
+        return root
+    
+def delete_max(my_bst):
+    my_bst["root"] = delete_max_node(my_bst("root"))
+    return my_bst
+
+
+
+def height_node(root):
+    if root is None:
+        return 0
+    left_height = height_node["left"]
+    right_height = height_node["right"]
+    
+    return 1 + max(left_height, right_height)
+
+def height(my_bst):
+    return height_node(my_bst["root"])
+        
+    
+def keys_range(root, key_initial, key_final, list_key):
+    if root is None:
+        return list_key
+    
+    key = root["key"]
+
+    if key_initial < key:
+        keys_range(root["left"], key_initial, key_final, list_key)
+        
+    if key_initial <= key <= key_final:
+        sl.add_last(list_key, key)    
+    
+    if key < key_final:
+        keys_range(root["right"], key_initial, key_final, list_key)
+        
+    return list_key
+
+def keys(my_bst, key_initial, key_final):
+    list_key = sl.new_list
+    keys_range(my_bst["root"], key_initial, key_final, list_key)
+    return list_key
+
+
+def values_range(root, key_initial, key_final, list_key):
+    if root is None:
+        return list_key
+    
+    key = root["key"]
+
+    if key_initial < key:
+        values_range(root["left"], key_initial, key_final, list_key)
+        
+    if key_initial <= key <= key_final:
+        sl.add_last(list_key, root["value"])    
+    
+    if key < key_final:
+        values_range(root["right"], key_initial, key_final, list_key)    
+        
+    return list_key
+
+def values(my_bst, key_initial, key_final):
+    list_key = sl.new_list
+    values_range(my_bst["root"], key_initial, key_final, list_key)
+    return list_key

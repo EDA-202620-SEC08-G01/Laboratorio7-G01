@@ -57,7 +57,7 @@ def new_logic():
 
     analyzer['crimes'] = al.new_list()
     # TODO completar la creación del mapa ordenado
-    analyzer['dateIndex'] = None
+    analyzer['dateIndex'] = bst.new_map
     
     return analyzer
 
@@ -101,8 +101,8 @@ def update_date_index(map, crime):
     crimedate = datetime.datetime.strptime(occurreddate, '%Y-%m-%d %H:%M:%S')
     entry = bst.get(map, crimedate.date())
     if entry is None:
-        # TODO Realizar el caso en el que no se encuentra la fecha
-        pass
+        datentry = new_data_entry(crime)
+        bst.put(map, crimedate.date(), datentry)
     else:
         datentry = entry
     add_date_index(datentry, crime)
@@ -122,12 +122,12 @@ def add_date_index(datentry, crime):
     offentry = lp.get(offenseIndex, crime['OFFENSE_CODE_GROUP'])
     if (offentry is None):
         # TODO Realice el caso en el que no se encuentre el tipo de crimen
-        offlist = al.new_list()
-        al.add_last(offlist, crime)
-        lp.put(offenseIndex, crime['OFFENSE_CODE_GROUP'], offlist)
+        offentry = new_offense_entry(crime['OFFENSE_CODE_GROUP'], crime)
+        al.add_last(offentry['lstoffenses'], crime)
+        lp.put(offenseIndex, crime['OFFENSE_CODE_GROUP'], offentry)
     else:
         # TODO Realice el caso en el que se encuentre el tipo de crimen
-        al.add_last(offentry, crime)
+        al.add_last(offentry['lstoffenses'], crime)
     return datentry
 
 
