@@ -57,7 +57,7 @@ def new_logic():
 
     analyzer['crimes'] = al.new_list()
     # TODO completar la creación del mapa ordenado
-    analyzer['dateIndex'] = bst.new_map
+    analyzer['dateIndex'] = None
     
     return analyzer
 
@@ -101,8 +101,8 @@ def update_date_index(map, crime):
     crimedate = datetime.datetime.strptime(occurreddate, '%Y-%m-%d %H:%M:%S')
     entry = bst.get(map, crimedate.date())
     if entry is None:
-        datentry = new_data_entry(crime)
-        bst.put(map, crimedate.date(), datentry)
+        # TODO Realizar el caso en el que no se encuentra la fecha
+        pass
     else:
         datentry = entry
     add_date_index(datentry, crime)
@@ -122,12 +122,12 @@ def add_date_index(datentry, crime):
     offentry = lp.get(offenseIndex, crime['OFFENSE_CODE_GROUP'])
     if (offentry is None):
         # TODO Realice el caso en el que no se encuentre el tipo de crimen
-        offentry = new_offense_entry(crime['OFFENSE_CODE_GROUP'], crime)
-        al.add_last(offentry['lstoffenses'], crime)
-        lp.put(offenseIndex, crime['OFFENSE_CODE_GROUP'], offentry)
+        offlist = al.new_list()
+        al.add_last(offlist, crime)
+        lp.put(offenseIndex, crime['OFFENSE_CODE_GROUP'], offlist)
     else:
         # TODO Realice el caso en el que se encuentre el tipo de crimen
-        al.add_last(offentry['lstoffenses'], crime)
+        al.add_last(offentry, crime)
     return datentry
 
 
@@ -217,7 +217,6 @@ def get_crimes_by_range(analyzer, initialDate, finalDate):
             
     return result_list
 
-
 def get_crimes_by_range_code(analyzer, initialDate, offensecode):
     """
     Para una fecha determinada, retorna el numero de crimenes
@@ -225,15 +224,16 @@ def get_crimes_by_range_code(analyzer, initialDate, offensecode):
     """
     # TODO Completar la función de consulta de crimenes por tipo de crimen en una fecha
     result_list = al.new_list()
-    dates_list = al.new_list()
     
     datentry = bst.get(analyzer['dateIndex'], initialDate)
     
-    for i in range(1, al.size(dates_list) + 1):
-        datentry = al.get(dates_list, i)
-        lst_crimes = datentry['lstcrimes']
+    if datentry is not None:
+        offenseIndex = datentry['offenseIndex']
+        # Buscar la lista de crímenes de ese tipo usando la tabla de hash
+        offentry = lp.get(offenseIndex, offensecode)
         
-        for j in range(1, al.size(lst_crimes) + 1):
-            al.add_last(result_list, al.get(lst_crimes, j))
+        if offentry is not None:
+            for j in range(1, al.size(offentry) + 1):
+                al.add_last(result_list, al.get(offentry, j))
             
     return result_list
